@@ -1,13 +1,13 @@
-import pandas as pd
-
 def filter_estimated_tasks(df):
     return df[df['normal'] != '?'].copy()
+
 
 def prepare_data_for_calculation_of_normal(df):
     estimated_df = filter_estimated_tasks(df)
     estimated_df['normal'] = estimated_df['normal'].astype(float)
     estimated_df = estimated_df.rename(columns={"id": "id", "normal": "estimate"})
     return estimated_df[['id', 'estimate']]
+
 
 def prepare_data_with_all_estimations(df):
     full_estimated_df = filter_estimated_tasks(df)
