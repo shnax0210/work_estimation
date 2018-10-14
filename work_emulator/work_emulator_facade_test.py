@@ -115,7 +115,7 @@ def create_valid_tasks():
 
 
 def convert_cells_to_task_set(history_row):
-    return set([cell.get_task_uid() for cell in history_row.get_cells()])
+    return set([cell.task_uid for cell in history_row.cells])
 
 
 class MockTaskProvider:

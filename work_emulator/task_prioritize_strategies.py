@@ -9,8 +9,8 @@ class BlockedEffortTaskPrioritizeStrategy:
     def _calculate_blocked_effort(self, task):
         blocked_effort = 0
 
-        for task_blocked_by in task.get_tasks_blocked_by():
-            blocked_effort += task_blocked_by.get_required_effort() + self._calculate_blocked_effort(task_blocked_by)
+        for task_blocked_by in task.tasks_blocked_by:
+            blocked_effort += task_blocked_by.required_effort + self._calculate_blocked_effort(task_blocked_by)
 
         return blocked_effort
 
@@ -25,7 +25,7 @@ class BlockedEffortTaskPrioritizeStrategy:
 
     @staticmethod
     def _find_most_prioritized_by_required_effort(tasks):
-        required_effort_to_task = dict([(task.get_required_effort(), task) for task in tasks])
+        required_effort_to_task = dict([(task.required_effort, task) for task in tasks])
         min_required_effort = min([effort for (effort, task) in required_effort_to_task.items()])
 
         return required_effort_to_task.get(min_required_effort)

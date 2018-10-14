@@ -9,7 +9,7 @@ class TaskBoard:
         self.tasks_validator = tasks_validator
 
     def are_all_tasks_completed(self):
-        return all(task.get_status() == TaskStatus.COMPLETED for task in self.tasks)
+        return all(task.status == TaskStatus.COMPLETED for task in self.tasks)
 
     def has_open_tasks(self):
         return len(self._get_open_tasks()) > 0
@@ -29,4 +29,4 @@ class TaskBoard:
         return 'Next error found during tasks adding: {}'.format(error)
 
     def _get_open_tasks(self):
-        return [task for task in self.tasks if task.get_status() == TaskStatus.OPEN]
+        return [task for task in self.tasks if task.status == TaskStatus.OPEN]

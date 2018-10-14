@@ -26,7 +26,8 @@ class Task:
 
         self.left_effort -= effort_amount
 
-    def get_status(self):
+    @property
+    def status(self):
         if self.left_effort == 0:
             return TaskStatus.COMPLETED
 
@@ -38,15 +39,6 @@ class Task:
 
         return TaskStatus.OPEN
 
-    def get_uid(self):
-        return self.uid
-
-    def get_blockers(self):
-        return self.blockers
-
-    def get_tasks_blocked_by(self):
-        return self.tasks_blocked_by
-
     def add_blocker(self, blocker):
         self.blockers.add(blocker)
         blocker.add_task_blocked_by(self)
@@ -54,8 +46,5 @@ class Task:
     def add_task_blocked_by(self, task_blocked_by):
         self.tasks_blocked_by.add(task_blocked_by)
 
-    def get_required_effort(self):
-        return self.required_effort
-
     def _has_not_completed_blockers(self):
-        return len([blocker for blocker in self.blockers if blocker.get_status() != TaskStatus.COMPLETED]) > 0
+        return len([blocker for blocker in self.blockers if blocker.status != TaskStatus.COMPLETED]) > 0

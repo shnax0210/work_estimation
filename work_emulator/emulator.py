@@ -34,4 +34,4 @@ class Emulator:
             worker.work_one_day()
 
     def _record_history(self, worker, day):
-        self.history.record(day, worker.get_name(), worker.get_task_uid())
+        self.history.record(day, worker.name, worker.task_uid)

@@ -19,14 +19,12 @@ class Worker:
 
         self.task.do_effort(1)
 
-        if self.task.get_status() == TaskStatus.COMPLETED:
+        if self.task.status == TaskStatus.COMPLETED:
             self.task = None
 
-    def get_task_uid(self):
+    @property
+    def task_uid(self):
         if self.task is not None:
-            return self.task.get_uid()
+            return self.task.uid
 
         return None
-
-    def get_name(self):
-        return self.name
