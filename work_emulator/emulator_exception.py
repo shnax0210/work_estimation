@@ -1,0 +1,2 @@
+class WorkEmulatorException(Exception):
+    pass
