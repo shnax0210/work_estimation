@@ -16,9 +16,6 @@ class Emulator:
 
         return self.history.get_recorded()
 
-    def get_history(self):
-        return self.history
-
     def _get_free_workers(self):
         return [worker for worker in self.workers if worker.is_free()]
 
