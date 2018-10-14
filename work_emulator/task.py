@@ -9,8 +9,8 @@ class TaskStatus(Enum):
 
 
 class Task:
-    def __init__(self, name, required_effort):
-        self.name = name
+    def __init__(self, uid, required_effort):
+        self.uid = uid
         self.required_effort = required_effort
         self.left_effort = required_effort
         self.blockers = set()
@@ -38,8 +38,8 @@ class Task:
 
         return TaskStatus.OPEN
 
-    def get_name(self):
-        return self.name
+    def get_uid(self):
+        return self.uid
 
     def get_blockers(self):
         return self.blockers

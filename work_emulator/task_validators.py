@@ -7,7 +7,7 @@ class TasksValidatorComposite:
         self.validators = validators
 
     def validate(self, tasks):
-        sorted_tasks = sorted(tasks, key=lambda task: task.get_name())
+        sorted_tasks = sorted(tasks, key=lambda task: task.get_uid())
         for validator in self.validators:
             error = validator.validate(sorted_tasks)
             if error is not None:
@@ -15,18 +15,18 @@ class TasksValidatorComposite:
         return None
 
 
-class TasksUniqueNamesValidator:
+class TasksUniqueUidsValidator:
     def validate(self, tasks):
-        not_unique_names = self._find_not_unique_names(tasks)
-        if len(not_unique_names) > 0:
-            return "There are tasks that have duplicated names: " + str(not_unique_names)
+        not_unique_uids = self._find_not_unique_uids(tasks)
+        if len(not_unique_uids) > 0:
+            return "There are tasks that have duplicated uids: " + str(not_unique_uids)
 
         return None
 
     @staticmethod
-    def _find_not_unique_names(tasks):
-        name_to_tasks = groupby(tasks, lambda task: task.get_name())
-        return [name for name, tasks_with_name in name_to_tasks if len(list(tasks_with_name)) > 1]
+    def _find_not_unique_uids(tasks):
+        uid_to_tasks = groupby(tasks, lambda task: task.get_uid())
+        return [uid for uid, tasks_with_uid in uid_to_tasks if len(list(tasks_with_uid)) > 1]
 
 
 class TasksDependencyLoopsValidator:
@@ -46,11 +46,11 @@ class TasksDependencyLoopsValidator:
         return self._filter_duplicated_loops(dependency_loops)
 
     def _find_dependency_loops_for_task(self, task, dependency_chain):
-        if task.get_name() in dependency_chain:
-            dependency_chain.append(task.get_name())
+        if task.get_uid() in dependency_chain:
+            dependency_chain.append(task.get_uid())
             return [dependency_chain]
 
-        dependency_chain.append(task.get_name())
+        dependency_chain.append(task.get_uid())
         dependency_loops = []
 
         for blocker in task.get_blockers():

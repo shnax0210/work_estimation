@@ -1,7 +1,7 @@
 from work_emulator.emulator import Emulator
 from work_emulator.task_board import TaskBoard
 from work_emulator.task_prioritize_strategies import BlockedEffortTaskPrioritizeStrategy
-from work_emulator.task_validators import TasksValidatorComposite, TasksUniqueNamesValidator, \
+from work_emulator.task_validators import TasksValidatorComposite, TasksUniqueUidsValidator, \
     TasksDependencyLoopsValidator
 from work_emulator.worker import Worker
 
@@ -20,6 +20,6 @@ class WorkEmulatorFacade:
 
     def create_task_board(self):
         task_board = TaskBoard(BlockedEffortTaskPrioritizeStrategy(),
-                               TasksValidatorComposite([TasksUniqueNamesValidator(), TasksDependencyLoopsValidator()]))
+                               TasksValidatorComposite([TasksUniqueUidsValidator(), TasksDependencyLoopsValidator()]))
         task_board.add_tasks(self.task_provider.get_all())
         return task_board

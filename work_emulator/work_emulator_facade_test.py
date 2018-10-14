@@ -4,12 +4,12 @@ from work_emulator.emulator_exception import WorkEmulatorException
 from work_emulator.task import Task
 from work_emulator.work_emulator_facade import WorkEmulatorFacade
 
-TASK_NAME1 = 'task1'
-TASK_NAME2 = 'task2'
-TASK_NAME3 = 'task3'
-TASK_NAME4 = 'task4'
-TASK_NAME5 = 'task5'
-TASK_NAME6 = 'task6'
+TASK_UID1 = 'task1'
+TASK_UID2 = 'task2'
+TASK_UID3 = 'task3'
+TASK_UID4 = 'task4'
+TASK_UID5 = 'task5'
+TASK_UID6 = 'task6'
 
 
 class WorkEmulatorFacadeTest(unittest.TestCase):
@@ -23,22 +23,22 @@ class WorkEmulatorFacadeTest(unittest.TestCase):
         # Then
         self.assertEqual(len(history), 12)
 
-        self.assertSetEqual(convert_cells_to_task_set(history[0]), set([TASK_NAME4, None]))
-        self.assertSetEqual(convert_cells_to_task_set(history[1]), set([TASK_NAME4, None]))
-        self.assertSetEqual(convert_cells_to_task_set(history[2]), set([TASK_NAME1, TASK_NAME5]))
-        self.assertSetEqual(convert_cells_to_task_set(history[3]), set([TASK_NAME1, TASK_NAME5]))
-        self.assertSetEqual(convert_cells_to_task_set(history[4]), set([TASK_NAME3, TASK_NAME6]))
-        self.assertSetEqual(convert_cells_to_task_set(history[5]), set([TASK_NAME3, TASK_NAME6]))
-        self.assertSetEqual(convert_cells_to_task_set(history[6]), set([TASK_NAME3, TASK_NAME6]))
-        self.assertSetEqual(convert_cells_to_task_set(history[7]), set([TASK_NAME2, TASK_NAME6]))
-        self.assertSetEqual(convert_cells_to_task_set(history[8]), set([TASK_NAME2, None]))
-        self.assertSetEqual(convert_cells_to_task_set(history[9]), set([TASK_NAME2, None]))
-        self.assertSetEqual(convert_cells_to_task_set(history[10]), set([TASK_NAME2, None]))
-        self.assertSetEqual(convert_cells_to_task_set(history[11]), set([TASK_NAME2, None]))
+        self.assertSetEqual({TASK_UID4, None}, convert_cells_to_task_set(history[0]))
+        self.assertSetEqual({TASK_UID4, None}, convert_cells_to_task_set(history[1]))
+        self.assertSetEqual({TASK_UID1, TASK_UID5}, convert_cells_to_task_set(history[2]))
+        self.assertSetEqual({TASK_UID1, TASK_UID5}, convert_cells_to_task_set(history[3]))
+        self.assertSetEqual({TASK_UID3, TASK_UID6}, convert_cells_to_task_set(history[4]))
+        self.assertSetEqual({TASK_UID3, TASK_UID6}, convert_cells_to_task_set(history[5]))
+        self.assertSetEqual({TASK_UID3, TASK_UID6}, convert_cells_to_task_set(history[6]))
+        self.assertSetEqual({TASK_UID2, TASK_UID6}, convert_cells_to_task_set(history[7]))
+        self.assertSetEqual({TASK_UID2, None}, convert_cells_to_task_set(history[8]))
+        self.assertSetEqual({TASK_UID2, None}, convert_cells_to_task_set(history[9]))
+        self.assertSetEqual({TASK_UID2, None}, convert_cells_to_task_set(history[10]))
+        self.assertSetEqual({TASK_UID2, None}, convert_cells_to_task_set(history[11]))
 
     def test_error_when_tasks_duplicated_names(self):
         # Given
-        work_emulator_facade = WorkEmulatorFacade(2, MockTaskProvider(create_tasks_with_duplicated_names()))
+        work_emulator_facade = WorkEmulatorFacade(2, MockTaskProvider(create_tasks_with_duplicated_uids()))
 
         # When
         try:
@@ -47,7 +47,7 @@ class WorkEmulatorFacadeTest(unittest.TestCase):
         except WorkEmulatorException as error:
             # Then
             self.assertEqual(
-                "Next error found during tasks adding: There are tasks that have duplicated names: ['task1', 'task5']",
+                "Next error found during tasks adding: There are tasks that have duplicated uids: ['task1', 'task5']",
                 str(error))
 
     def test_error_when_tasks_have_dependency_loops(self):
@@ -66,24 +66,24 @@ class WorkEmulatorFacadeTest(unittest.TestCase):
                 str(error))
 
 
-def create_tasks_with_duplicated_names():
-    task1 = Task(TASK_NAME1, 2)
-    task2 = Task(TASK_NAME2, 5)
-    task3 = Task(TASK_NAME1, 3)
-    task4 = Task(TASK_NAME4, 2)
-    task5 = Task(TASK_NAME5, 2)
-    task6 = Task(TASK_NAME5, 4)
+def create_tasks_with_duplicated_uids():
+    task1 = Task(TASK_UID1, 2)
+    task2 = Task(TASK_UID2, 5)
+    task3 = Task(TASK_UID1, 3)
+    task4 = Task(TASK_UID4, 2)
+    task5 = Task(TASK_UID5, 2)
+    task6 = Task(TASK_UID5, 4)
 
     return [task1, task2, task3, task4, task5, task6]
 
 
 def create_tasks_with_dependency_loops():
-    task1 = Task(TASK_NAME1, 2)
-    task2 = Task(TASK_NAME2, 5)
-    task3 = Task(TASK_NAME3, 3)
-    task4 = Task(TASK_NAME4, 2)
-    task5 = Task(TASK_NAME5, 2)
-    task6 = Task(TASK_NAME6, 4)
+    task1 = Task(TASK_UID1, 2)
+    task2 = Task(TASK_UID2, 5)
+    task3 = Task(TASK_UID3, 3)
+    task4 = Task(TASK_UID4, 2)
+    task5 = Task(TASK_UID5, 2)
+    task6 = Task(TASK_UID6, 4)
 
     task1.add_blocker(task3)
     task3.add_blocker(task1)
@@ -98,12 +98,12 @@ def create_tasks_with_dependency_loops():
 
 
 def create_valid_tasks():
-    task1 = Task(TASK_NAME1, 2)
-    task2 = Task(TASK_NAME2, 5)
-    task3 = Task(TASK_NAME3, 3)
-    task4 = Task(TASK_NAME4, 2)
-    task5 = Task(TASK_NAME5, 2)
-    task6 = Task(TASK_NAME6, 4)
+    task1 = Task(TASK_UID1, 2)
+    task2 = Task(TASK_UID2, 5)
+    task3 = Task(TASK_UID3, 3)
+    task4 = Task(TASK_UID4, 2)
+    task5 = Task(TASK_UID5, 2)
+    task6 = Task(TASK_UID6, 4)
 
     task2.add_blocker(task5)
     task5.add_blocker(task4)
@@ -115,7 +115,7 @@ def create_valid_tasks():
 
 
 def convert_cells_to_task_set(history_row):
-    return set([cell.get_task_name() for cell in history_row.get_cells()])
+    return set([cell.get_task_uid() for cell in history_row.get_cells()])
 
 
 class MockTaskProvider:

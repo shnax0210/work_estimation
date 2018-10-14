@@ -22,9 +22,9 @@ class Worker:
         if self.task.get_status() == TaskStatus.COMPLETED:
             self.task = None
 
-    def get_task_name(self):
+    def get_task_uid(self):
         if self.task is not None:
-            return self.task.get_name()
+            return self.task.get_uid()
 
         return None
 

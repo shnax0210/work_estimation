@@ -1,13 +1,13 @@
 class EmulationHistoryCell:
-    def __init__(self, worker_name, task_name):
+    def __init__(self, worker_name, task_uid):
         self.worker_name = worker_name
-        self.task_name = task_name
+        self.task_uid = task_uid
 
     def get_worker_name(self):
         return self.worker_name
 
-    def get_task_name(self):
-        return self.task_name
+    def get_task_uid(self):
+        return self.task_uid
 
 
 class EmulationHistoryRow:
@@ -29,11 +29,11 @@ class EmulationHistory:
     def __init__(self):
         self.records = dict()
 
-    def record(self, day, worker_name, task_name):
+    def record(self, day, worker_name, task_uid):
         if day not in self.records:
             self.records[day] = EmulationHistoryRow(day)
 
-        self.records[day].add_cell(EmulationHistoryCell(worker_name, task_name))
+        self.records[day].add_cell(EmulationHistoryCell(worker_name, task_uid))
 
     def get_recorded(self):
         return sorted(self.records.values(), key=lambda row: row.get_day())
