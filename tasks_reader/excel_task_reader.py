@@ -1,6 +1,6 @@
 import openpyxl
 
-from tasks_reader.raw_task import RawTask
+from tasks_reader.task_row import TaskRow
 
 ROWS_TO_SKIP_RANGE_DELIMITER = ':'
 ROWS_TO_SKIP_DELIMITER = ','
@@ -25,7 +25,7 @@ class ExcelTaskReader:
                 row_index not in parsed_rows_to_skip]
 
     def _create_task(self, sheet, row_index):
-        return RawTask(uid=self._fetch_string(sheet, row_index, 'uid'),
+        return TaskRow(uid=self._fetch_string(sheet, row_index, 'uid'),
                        name=self._fetch_string(sheet, row_index, 'name'),
                        blockers=self._fetch_array(sheet, row_index, 'blockers'),
                        min_estimate=self._fetch_int(sheet, row_index, 'min_estimate'),

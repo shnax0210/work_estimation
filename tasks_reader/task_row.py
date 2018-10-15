@@ -1,4 +1,4 @@
-class RawTask:
+class TaskRow:
     def __init__(self, uid, name=None, blockers=None, normal_estimate=None, min_estimate=None, max_estimate=None):
         self.uid = uid
         self.name = name
