@@ -9,7 +9,8 @@ class TaskReaderFacadeTest(unittest.TestCase):
         file = "test_resources/test_tasks.xlsx"
         sheet = "tasks"
         first_row = 4
-        last_row = 9
+        last_row = 13
+        rows_to_skip = '6,9:11'
         columns_mapping = {
             'uid': 'A',
             'name': 'B',
@@ -20,7 +21,7 @@ class TaskReaderFacadeTest(unittest.TestCase):
         }
 
         # When
-        tasks = read_from_excel(file, sheet, first_row, columns_mapping, last_row)
+        tasks = read_from_excel(file, sheet, first_row, columns_mapping, last_row, rows_to_skip)
 
         #
         self.assertEqual(6, len(tasks))
