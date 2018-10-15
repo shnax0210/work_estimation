@@ -39,22 +39,25 @@ class ExcelTaskReader:
 
         return string_value.split(self.array_delimiter)
 
-    def _fetch_int(self, sheet, row_index, column_name):
-        string_value = self._fetch_string(sheet, row_index, column_name)
+    def _fetch_int(self, sheet, row_index, field_name):
+        string_value = self._fetch_string(sheet, row_index, field_name)
         if not string_value:
             return None
 
         return int(float(string_value))
 
-    def _fetch_string(self, sheet, row_index, column_name):
-        cell_value = self._fetch_cell_value(sheet, row_index, column_name)
+    def _fetch_string(self, sheet, row_index, field_name):
+        cell_value = self._fetch_cell_value(sheet, row_index, field_name)
         if not cell_value:
             return ''
 
         return str(cell_value).strip()
 
-    def _fetch_cell_value(self, sheet, row_index, column_name):
-        column = self.columns_mapping[column_name]
+    def _fetch_cell_value(self, sheet, row_index, field_name):
+        if field_name not in self.columns_mapping:
+            return None
+
+        column = self.columns_mapping[field_name]
         return sheet['{}{}'.format(column, row_index)].value
 
     def _parse_rows_to_skip(self):

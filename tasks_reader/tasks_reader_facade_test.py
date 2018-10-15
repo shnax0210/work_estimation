@@ -68,6 +68,37 @@ class TaskReaderFacadeTest(unittest.TestCase):
                          normal_estimate=40,
                          max_estimate=None)
 
+    def test_read_from_excel_only_several_fields_of_tasks(self):
+        # Given
+        file = "test_resources/test_tasks.xlsx"
+        sheet = "tasks"
+        first_row = 4
+        last_row = 5
+        columns_mapping = {
+            'uid': 'A',
+            'normal_estimate': 'F'
+        }
+
+        # When
+        tasks = read_from_excel(file, sheet, first_row, columns_mapping, last_row)
+
+        #
+        self.assertEqual(2, len(tasks))
+        self._check_task(tasks[0],
+                         uid='TASK-1',
+                         name='',
+                         blockers=[],
+                         min_estimate=None,
+                         normal_estimate=5,
+                         max_estimate=None)
+        self._check_task(tasks[1],
+                         uid='TASK-2',
+                         name='',
+                         blockers=[],
+                         min_estimate=None,
+                         normal_estimate=3,
+                         max_estimate=None)
+
     def _check_task(self, task, uid, name, blockers, min_estimate, normal_estimate, max_estimate):
         self.assertEqual(uid, task.uid)
         self.assertEqual(name, task.name)
