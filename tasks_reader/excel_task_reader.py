@@ -7,7 +7,7 @@ ROWS_TO_SKIP_DELIMITER = ','
 
 
 class ExcelTaskReader:
-    def __init__(self, file, sheet, first_row, columns_mapping, last_row, array_delimiter=',', rows_to_skip=None):
+    def __init__(self, file, sheet, first_row, last_row, columns_mapping, array_delimiter=',', rows_to_skip=None):
         self.file = file
         self.sheet = sheet
         self.first_row = first_row
@@ -25,12 +25,19 @@ class ExcelTaskReader:
                 row_index not in parsed_rows_to_skip]
 
     def _create_task(self, sheet, row_index):
-        return TaskRow(uid=self._fetch_string(sheet, row_index, 'uid'),
+        return TaskRow(uid=self._fetch_uid(row_index, sheet),
                        name=self._fetch_string(sheet, row_index, 'name'),
                        blockers=self._fetch_array(sheet, row_index, 'blockers'),
                        min_estimate=self._fetch_int(sheet, row_index, 'min_estimate'),
                        normal_estimate=self._fetch_int(sheet, row_index, 'normal_estimate'),
                        max_estimate=self._fetch_int(sheet, row_index, 'max_estimate'))
+
+    def _fetch_uid(self, row_index, sheet):
+        uid = self._fetch_string(sheet, row_index, 'uid')
+        if not uid:
+            raise ValueError('Filed uid is required. Row {} does not contain uid'.format(row_index))
+
+        return uid
 
     def _fetch_array(self, sheet, row_index, column_name):
         string_value = self._fetch_string(sheet, row_index, column_name)
