@@ -1,5 +1,6 @@
 import unittest
 
+from tasks_reader import tasks_filter
 from tasks_reader.tasks_reader_facade import read_from_excel
 
 
@@ -19,12 +20,14 @@ class TaskReaderFacadeTest(unittest.TestCase):
             'normal_estimate': 'F',
             'max_estimate': 'G'
         }
+        filter_predicates = [tasks_filter.NormalEstimateRequiredPredicate()]
 
         # When
-        tasks = read_from_excel(file, sheet, first_row, columns_mapping, last_row, rows_to_skip)
+        tasks, errors = read_from_excel(file, sheet, first_row, last_row, columns_mapping, rows_to_skip,
+                                        filter_predicates)
 
         #
-        self.assertEqual(6, len(tasks))
+        self.assertEqual(5, len(tasks))
         self._check_task(tasks[0],
                          uid='TASK-1',
                          name='Base functionality implementations.',
@@ -40,33 +43,30 @@ class TaskReaderFacadeTest(unittest.TestCase):
                          normal_estimate=3,
                          max_estimate=8)
         self._check_task(tasks[2],
-                         uid='TASK-3',
-                         name='Popup implementation.',
-                         blockers=['TASK-1'],
-                         min_estimate=None,
-                         normal_estimate=None,
-                         max_estimate=None)
-        self._check_task(tasks[3],
                          uid='TASK-4',
                          name='Integration tests for first page and popup.',
                          blockers=['TASK-2', 'TASK-3'],
                          min_estimate=5,
                          normal_estimate=13,
                          max_estimate=20)
-        self._check_task(tasks[4],
+        self._check_task(tasks[3],
                          uid='TASK-5',
                          name='Cart calculation logic - Part 1',
                          blockers=[],
                          min_estimate=13,
                          normal_estimate=20,
                          max_estimate=40)
-        self._check_task(tasks[5],
+        self._check_task(tasks[4],
                          uid='TASK-6',
                          name='Second page implementation.',
                          blockers=['TASK-2'],
                          min_estimate=None,
                          normal_estimate=40,
                          max_estimate=None)
+
+        self.assertEqual(1, len(errors))
+        self.assertEqual("Task with uid: 'TASK-3' was filtered due to: ['normal_estimate field is required']",
+                         errors[0])
 
     def test_read_from_excel_only_several_fields_of_tasks(self):
         # Given
@@ -80,10 +80,11 @@ class TaskReaderFacadeTest(unittest.TestCase):
         }
 
         # When
-        tasks = read_from_excel(file, sheet, first_row, columns_mapping, last_row)
+        tasks, errors = read_from_excel(file, sheet, first_row, last_row, columns_mapping)
 
         #
         self.assertEqual(2, len(tasks))
+        self.assertEqual(0, len(errors))
         self._check_task(tasks[0],
                          uid='TASK-1',
                          name='',
