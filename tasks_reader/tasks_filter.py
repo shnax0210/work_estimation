@@ -1,14 +1,15 @@
-def filter_task_rows(tasks, predicates):
+def filter_tasks(tasks, predicates):
     result_tasks = []
+    result_errors = []
 
     for task in tasks:
         errors = _test_task(task, predicates)
         if len(errors) > 0:
-            print("Task with uid: '{}' was filtered due to: {}".format(task.uid, errors))
+            result_errors.append("Task with uid: '{}' was filtered due to: {}".format(task.uid, errors))
         else:
             result_tasks.append(task)
 
-    return result_tasks
+    return result_tasks, result_errors
 
 
 def _test_task(task, predicates):
