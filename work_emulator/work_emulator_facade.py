@@ -6,20 +6,17 @@ from work_emulator.task_validators import TasksValidatorComposite, TasksUniqueUi
 from work_emulator.worker import Worker
 
 
-class WorkEmulatorFacade:
-    def __init__(self, number_of_workers, task_provider):
-        self.number_of_workers = number_of_workers
-        self.task_provider = task_provider
+def emulate(number_of_workers, tasks):
+    emulator = Emulator(_create_workers(number_of_workers), _create_task_board(tasks))
+    return emulator.emulate()
 
-    def emulate(self):
-        emulator = Emulator(self.create_workers(), self.create_task_board())
-        return emulator.emulate()
 
-    def create_workers(self):
-        return [Worker("worker{}".format(index)) for index in range(self.number_of_workers)]
+def _create_workers(number_of_workers):
+    return [Worker("worker{}".format(index)) for index in range(number_of_workers)]
 
-    def create_task_board(self):
-        task_board = TaskBoard(BlockedEffortTaskPrioritizeStrategy(),
-                               TasksValidatorComposite([TasksUniqueUidsValidator(), TasksDependencyLoopsValidator()]))
-        task_board.add_tasks(self.task_provider.get_all())
-        return task_board
+
+def _create_task_board(tasks):
+    task_board = TaskBoard(BlockedEffortTaskPrioritizeStrategy(),
+                           TasksValidatorComposite([TasksUniqueUidsValidator(), TasksDependencyLoopsValidator()]))
+    task_board.add_tasks(tasks)
+    return task_board

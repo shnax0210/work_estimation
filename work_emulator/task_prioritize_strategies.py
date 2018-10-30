@@ -9,8 +9,8 @@ class BlockedEffortTaskPrioritizeStrategy:
     def _calculate_blocked_effort(self, task):
         blocked_effort = 0
 
-        for task_blocked_by in task.tasks_blocked_by:
-            blocked_effort += task_blocked_by.required_effort + self._calculate_blocked_effort(task_blocked_by)
+        for blocked_task in task.blocked_tasks:
+            blocked_effort += blocked_task.required_effort + self._calculate_blocked_effort(blocked_task)
 
         return blocked_effort
 

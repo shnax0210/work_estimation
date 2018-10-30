@@ -2,7 +2,7 @@ import unittest
 
 from work_emulator.emulator_exception import WorkEmulatorException
 from work_emulator.task import Task
-from work_emulator.work_emulator_facade import WorkEmulatorFacade
+import work_emulator.work_emulator_facade as work_emulator_facade
 
 TASK_UID1 = 'task1'
 TASK_UID2 = 'task2'
@@ -15,10 +15,11 @@ TASK_UID6 = 'task6'
 class WorkEmulatorFacadeTest(unittest.TestCase):
     def test_emulation(self):
         # Given
-        work_emulator_facade = WorkEmulatorFacade(2, MockTaskProvider(create_valid_tasks()))
+        number_of_workers = 2
+        tasks = create_valid_tasks()
 
         # When
-        history = work_emulator_facade.emulate()
+        history = work_emulator_facade.emulate(number_of_workers, tasks)
 
         # Then
         self.assertEqual(len(history), 12)
@@ -38,11 +39,12 @@ class WorkEmulatorFacadeTest(unittest.TestCase):
 
     def test_error_when_tasks_duplicated_names(self):
         # Given
-        work_emulator_facade = WorkEmulatorFacade(2, MockTaskProvider(create_tasks_with_duplicated_uids()))
+        number_of_workers = 2
+        tasks = create_tasks_with_duplicated_uids()
 
         # When
         try:
-            work_emulator_facade.emulate()
+            work_emulator_facade.emulate(number_of_workers, tasks)
             self.fail()
         except WorkEmulatorException as error:
             # Then
@@ -52,11 +54,12 @@ class WorkEmulatorFacadeTest(unittest.TestCase):
 
     def test_error_when_tasks_have_dependency_loops(self):
         # Given
-        work_emulator_facade = WorkEmulatorFacade(2, MockTaskProvider(create_tasks_with_dependency_loops()))
+        number_of_workers = 2
+        tasks = create_tasks_with_dependency_loops()
 
         # When
         try:
-            work_emulator_facade.emulate()
+            work_emulator_facade.emulate(number_of_workers, tasks)
             self.fail()
         except WorkEmulatorException as error:
             # Then
