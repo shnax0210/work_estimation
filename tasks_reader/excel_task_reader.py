@@ -44,7 +44,7 @@ class ExcelTaskReader:
         if not string_value:
             return []
 
-        return string_value.split(self.array_delimiter)
+        return [value.strip() for value in string_value.split(self.array_delimiter)]
 
     def _fetch_int(self, sheet, row_index, field_name):
         string_value = self._fetch_string(sheet, row_index, field_name)
