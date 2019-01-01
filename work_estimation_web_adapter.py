@@ -11,7 +11,7 @@ EXCEL_FILE_EXTENSION = '.xlsx'
 TEMP_DIRECTORY = 'tmp'
 
 
-@route('/static/<filename>')
+@route('/application/<filename>')
 def server_static(filename):
     return static_file(filename, root='ui/web/')
 
