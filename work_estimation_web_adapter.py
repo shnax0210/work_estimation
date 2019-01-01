@@ -11,9 +11,9 @@ EXCEL_FILE_EXTENSION = '.xlsx'
 TEMP_DIRECTORY = 'tmp'
 
 
-@route('/application/<filename>')
-def server_static(filename):
-    return static_file(filename, root='ui/web/')
+@route('/application/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='ui/web/')
 
 
 @put('/api/excelWorkbook')
