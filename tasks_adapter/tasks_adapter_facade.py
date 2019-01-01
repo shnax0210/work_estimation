@@ -1,4 +1,4 @@
-from calculator.calculator_facade import calculate_task_mean_and_std
+from calculator.calculator_facade import calculate_mean_by_three_points, calculate_std_by_three_points
 from tasks_adapter.blockers_adapter import adapt_blockers, validate_blockers
 from work_emulator.task import Task
 import scipy.stats as stats
@@ -19,7 +19,8 @@ def adapt_use_normal_estimate(task_rows):
 
 def adapt_use_probability_estimate(task_rows):
     def generate_probability_estimate(task_row):
-        mean, std = calculate_task_mean_and_std(task_row)
+        mean = calculate_mean_by_three_points(task_row.min_estimate, task_row.normal_estimate, task_row.max_estimate)
+        std = calculate_std_by_three_points(task_row.min_estimate, task_row.max_estimate)
         return max(0., round(stats.norm.rvs(mean, std, size=1)[0]))
 
     return _adapt(task_rows, generate_probability_estimate)
