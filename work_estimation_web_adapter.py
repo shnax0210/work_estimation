@@ -1,4 +1,4 @@
-from bottle import put, post, request, run
+from bottle import put, post, request, run, route, static_file
 import os
 import uuid
 
@@ -9,6 +9,11 @@ from tasks_reader import tasks_filter
 EXCEL_FILE_EXTENSION = '.xlsx'
 
 TEMP_DIRECTORY = 'tmp'
+
+
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='ui/web/')
 
 
 @put('/workEstimation/excelWorkbook')
