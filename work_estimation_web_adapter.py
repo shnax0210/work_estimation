@@ -16,7 +16,7 @@ def server_static(filename):
     return static_file(filename, root='ui/web/')
 
 
-@put('/workEstimation/excelWorkbook')
+@put('/api/excelWorkbook')
 def save_temp_excel_file():
     if not os.path.exists(TEMP_DIRECTORY):
         os.makedirs(TEMP_DIRECTORY)
@@ -29,7 +29,7 @@ def save_temp_excel_file():
     return {'tempFileName': temp_file_name}
 
 
-@post('/workEstimation/excelWorkbook/tasks')
+@post('/api/excelWorkbook/tasks')
 def load_tasks_from_temp_excel_file():
     parameters = request.json
     task_rows, errors = work_estimation_facade.read_from_excel(file=_build_path_to_temp_file(parameters["file"]),
@@ -49,7 +49,7 @@ def load_tasks_from_temp_excel_file():
     }
 
 
-@post('/workEstimation/tasks/normalDistribution')
+@post('/api/tasks/normalDistribution')
 def calculate_normal_distributions():
     tasks = request.json["tasks"]
     number_of_points = request.json["numberOfPoints"]
