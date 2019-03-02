@@ -16,10 +16,10 @@
     </style>
     <script>
 
-        function viewDiv1(){
+        function columnMappingDiv1(){
             document.getElementById("div1").style.display = "block";
         };
-        function viewDiv2(){
+        function columnMappingDiv2(){
             document.getElementById("div1").style.display = "none";
         }
 
@@ -43,8 +43,8 @@
         <label><input type="text" id="firstRow"> First row</label><br>
         <label><input type="text" id="lastRow"> Last row</label><br>
         <label><input type="text" id="rowSkip"> Rows to skip</label><br>
-        <label><input type="button" value="+" onmousedown="viewDiv1()"></label>
-        <label><input type="button" value="-" onmousedown="viewDiv2()"></label>
+        <label><input type="button" value="+" onmousedown="columnMappingDiv1()"></label>
+        <label><input type="button" value="-" onmousedown="columnMappingDiv2()"></label>
 
     <div id="div1">
         <table border="0" widtd="100%">
