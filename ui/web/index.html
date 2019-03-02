@@ -9,18 +9,18 @@
     <link rel="stylesheet" type="text/css" href="jquery.jqplot/jquery.jqplot.css" />
     <style type="text/css">
 
-        #div1{
+        #area{
             display:none;
         }
 
     </style>
     <script>
 
-        function columnMappingDiv1(){
-            document.getElementById("div1").style.display = "block";
+        function openMappingDiv(){
+            document.getElementById("area").style.display = "block";
         };
-        function columnMappingDiv2(){
-            document.getElementById("div1").style.display = "none";
+        function hideMappingDiv(){
+            document.getElementById("area").style.display = "none";
         }
 
     </script>
@@ -43,10 +43,10 @@
         <label><input type="text" id="firstRow"> First row</label><br>
         <label><input type="text" id="lastRow"> Last row</label><br>
         <label><input type="text" id="rowSkip"> Rows to skip</label><br>
-        <label><input type="button" value="+" onmousedown="columnMappingDiv1()"></label>
-        <label><input type="button" value="-" onmousedown="columnMappingDiv2()"></label>
+        <label><input type="button" value="+" onmousedown="openMappingDiv()"></label>
+        <label><input type="button" value="-" onmousedown="hideMappingDiv()"></label>
 
-    <div id="div1">
+    <div id="area">
         <table border="0" widtd="100%">
             <tr>
                 <td>uid
@@ -166,7 +166,7 @@
 
         <legend>Load</legend>
 
-        <div id="div2">
+        <div id="place">
 
             <input type="submit" name="but" id="loadTasksButton" value="Load">
 
@@ -177,7 +177,7 @@
 
         <legend>Print</legend>
 
-        <div id="div3">
+        <div id="schedule">
 
             <table border="0" widtd="100%">
                 <tr>
