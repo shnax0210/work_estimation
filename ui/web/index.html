@@ -228,8 +228,8 @@
             tasksObject
         };
                                    
-        $("#loadTasksButton").click(dataInput); 
-            function dataInput() {
+        $("#loadTasksButton").click(loadTasks); 
+            function loadTasks() {
 
             var excelFile = $('#excelFile').get(0).files.item(0);
             requestBody.sheet = $("#sheetName").val();
@@ -265,8 +265,8 @@
              });                           
         };
 
-        $("#loadPrint").click(dataOutput);
-            function dataOutput() {
+        $("#loadPrint").click(printTaskGraphic);
+            function printTaskGraphic() {
 
             var numTask = applicationContext['tasks'];
             var tasksNumber = $("#tasks").val();
@@ -285,7 +285,7 @@
                 url: 'http://localhost:5000/api/tasks/normalDistribution',
                 contentType: 'application/json',
                 data: JSON.stringify(inquiryPoints),
-                success: function curveCreation(data) {
+                success: function drawTaskGraphic(data) {
                     //alert("Response received: " + JSON.stringify(data));
                     var tasksObj = {};
                     var line = [];
