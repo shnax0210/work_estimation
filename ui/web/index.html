@@ -228,7 +228,8 @@
             tasksObject
         };
                                    
-        $("#loadTasksButton").click(function() {
+        $("#loadTasksButton").click(dataInput); 
+            function dataInput() {
 
             var excelFile = $('#excelFile').get(0).files.item(0);
             requestBody.sheet = $("#sheetName").val();
@@ -262,9 +263,10 @@
                     });    
                 }
              });                           
-        });
+        };
 
-        $("#loadPrint").click(function() {
+        $("#loadPrint").click(dataOutput);
+            function dataOutput() {
 
             var numTask = applicationContext['tasks'];
             var tasksNumber = $("#tasks").val();
@@ -283,7 +285,7 @@
                 url: 'http://localhost:5000/api/tasks/normalDistribution',
                 contentType: 'application/json',
                 data: JSON.stringify(inquiryPoints),
-                success: function (data) {
+                success: function curveCreation(data) {
                     //alert("Response received: " + JSON.stringify(data));
                     var tasksObj = {};
                     var line = [];
@@ -315,7 +317,7 @@
                     });                   
                 }       
             });
-        });
+        };
         
 
     </script>
