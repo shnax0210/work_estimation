@@ -212,25 +212,18 @@
 
     <script>  
 
-        var columns_mapping = {};
-        var requestBody = {
-            columns_mapping
-        };
         var applicationContext = {};
-        var itemNumber;
-        var tasks = [];
-        var inquiryPoints = {"numberOfPoints": 50, 
-        tasks
-        };
 
         var tasksObject = {};
         var tasksPlot = {
             tasksObject
         };
                                    
-        $("#loadTasksButton").click(loadTasks); 
-            function loadTasks() {
-
+        function loadTasks() {
+            var columns_mapping = {};
+            var requestBody = {
+            columns_mapping
+            };
             var excelFile = $('#excelFile').get(0).files.item(0);
             requestBody.sheet = $("#sheetName").val();
             requestBody.first_row = +$("#firstRow").val();
@@ -265,22 +258,21 @@
              });                           
         };
 
-        $("#loadPrint").click(printTaskGraphic);
-            function printTaskGraphic() {
+        $("#loadTasksButton").click(loadTasks); 
 
-            var numTask = applicationContext['tasks'];
-            var tasksNumber = $("#tasks").val();
-     
-            for(var i = 0, iLen = numTask.length; i < iLen; i++){
-                if(i == +tasksNumber){
-                    itemNumber = numTask[i];
-                    delete itemNumber.blockers;
-                    delete itemNumber.name;
-                    tasks.push(itemNumber);
-                }
-            }
+        function printTaskGraphic() {
 
-            $.ajax({
+var taskToPrintIndex = $("#tasks").val(); 
+var taskToPrint = applicationContext.tasks[taskToPrintIndex]
+
+var inquiryPoints = {
+  "numberOfPoints": 50, 
+   "tasks": [taskToPrint]
+};
+            
+            $.ajax(
+
+            {
                 type: 'POST',
                 url: 'http://localhost:5000/api/tasks/normalDistribution',
                 contentType: 'application/json',
@@ -319,6 +311,7 @@
             });
         };
         
+        $("#loadPrint").click(printTaskGraphic);        
 
     </script>
 </body>
