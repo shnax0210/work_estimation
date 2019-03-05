@@ -1,0 +1,6 @@
+#IntelligIDEA files
+.idea/
+idea-module-files/
+
+# Jupyter notebook
+.ipynb_checkpoints/
