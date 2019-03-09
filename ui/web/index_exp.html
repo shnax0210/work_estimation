@@ -215,35 +215,7 @@
         var applicationContext = {};
                                    
         function loadTasks() {
-            var requestBody = {
-              sheet: $("#sheetName").val(),
-              first_row: +$("#firstRow").val(),
-              last_row: +$("#lastRow").val(),
-              rows_to_skip: $("#rowSkip").val(),
-              columns_mapping: {
-                uid: $("#uid").val(),
-                name: $("#nam").val(),
-                blockers: $("#blockers").val(),
-                min_estimate: $("#minEst").val(),
-                normal_estimate: $("#norEst").val(),
-                max_estimate: $("#maxEst").val()
-              }
-            };
-            /*var columns_mapping = {};
-            var requestBody = {
-                columns_mapping
-            };
-            var excelFile = $('#excelFile').get(0).files.item(0);
-            requestBody.sheet = $("#sheetName").val();
-            requestBody.first_row = +$("#firstRow").val();
-            requestBody.last_row = +$("#lastRow").val();
-            requestBody.rows_to_skip = $("#rowSkip").val();
-            columns_mapping.uid = $("#uid").val();
-            columns_mapping.name = $("#nam").val();
-            columns_mapping.blockers = $("#blockers").val();
-            columns_mapping.min_estimate = $("#minEst").val();
-            columns_mapping.normal_estimate = $("#norEst").val();
-            columns_mapping.max_estimate = $("#maxEst").val();*/ 
+            var excelFile = $('#excelFile').get(0).files.item(0);;
             $.ajax({
                 type: 'PUT',
                 url: 'http://localhost:5000/api/excelWorkbook',
@@ -251,7 +223,20 @@
                 contentType: 'application/vnd.ms-excel',
                 processData: false,
                 success: function (data) {
-
+                    var requestBody = {
+                      sheet: $("#sheetName").val(),
+                      first_row: +$("#firstRow").val(),
+                      last_row: +$("#lastRow").val(),
+                      rows_to_skip: $("#rowSkip").val(),
+                      columns_mapping: {
+                        uid: $("#uid").val(),
+                        name: $("#nam").val(),
+                        blockers: $("#blockers").val(),
+                        min_estimate: $("#minEst").val(),
+                        normal_estimate: $("#norEst").val(),
+                        max_estimate: $("#maxEst").val()
+                      }
+                    } 
                     alert("Response received: " + JSON.stringify(data));
                     requestBody.file = data.tempFileName;
                     $.ajax({
@@ -260,7 +245,7 @@
                         contentType: 'application/json',
                         data: JSON.stringify(requestBody),
                         success: function (data) {
-                            alert("Response received: " + JSON.stringify(data));
+                            alert("Response received: " + JSON.stringify(data));                         
                             applicationContext.tasks = data.tasks;
                         }    
                     });    
@@ -268,17 +253,13 @@
              });                           
         };
 
-
         function printTaskGraphic() {
-
             var taskToPrintIndex = $("#tasks").val(); 
             var taskToPrint = applicationContext.tasks[taskToPrintIndex];
-
             var inquiryPoints = {
               "numberOfPoints": 50, 
                "tasks": [taskToPrint]
-            };
-            
+            }; 
             $.ajax(
 
             {
@@ -287,11 +268,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(inquiryPoints),
                 success: function drawTaskGraphic(data) {
-                    //alert("Response received: " + JSON.stringify(data));
-                    var tasksObject = {};
-                    /*var tasksPlot = {
-                        tasksObject
-                    };*/
+                    //alert("Response received: " + JSON.stringify(data));                    
                     var tasksPlot = {};                    
                     var tasksObj = {};
                     var line = [];
