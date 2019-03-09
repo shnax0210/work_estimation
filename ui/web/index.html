@@ -177,29 +177,13 @@
 
         <legend>Print</legend>
 
-        <div id="schedule">
-
             <table border="0" widtd="100%">
                 <tr>
                     <td>Tasks
-                        <select name="tasks" id="tasks">
-                            <option value=""></option>
-                            <option value="0">Task 1</option>
-                            <option value="1">Task 2</option>
-                            <option value="2">Task 3</option>
-                            <option value="3">Task 4</option>
-                            <option value="4">Task 5</option>
-                            <option value="5">Task 6</option>
-                            <option value="6">Task 7</option>
-                            <option value="7">Task 8</option>
-                            <option value="8">Task 9</option>
-                            <option value="9">Task 10</option>
-                            <option value="10">Task 11</option>
-                            <option value="11">Task 12</option>            
-                        </select>                       
+                        <div id="choiceGraphic"></div>                      
                     </td>
                     <td>
-                        <input type="button" value="Print" id="loadPrint">
+                        <input type="button" value="Print" id="printGraphicButton">
                     </td>
                 </tr>
                 <tr>
@@ -210,31 +194,11 @@
                 </table>
     </fieldset>
 
-    <script>  
-
-        var applicationContext = {};
-
-        var tasksObject = {};
-        var tasksPlot = {
-            tasksObject
-        };
-                                   
+    <script> 
+            var applicationContext = {}; 
+                                              
         function loadTasks() {
-            var columns_mapping = {};
-            var requestBody = {
-            columns_mapping
-            };
             var excelFile = $('#excelFile').get(0).files.item(0);
-            requestBody.sheet = $("#sheetName").val();
-            requestBody.first_row = +$("#firstRow").val();
-            requestBody.last_row = +$("#lastRow").val();
-            requestBody.rows_to_skip = $("#rowSkip").val();
-            columns_mapping.uid = $("#uid").val();
-            columns_mapping.name = $("#nam").val();
-            columns_mapping.blockers = $("#blockers").val();
-            columns_mapping.min_estimate = $("#minEst").val();
-            columns_mapping.normal_estimate = $("#norEst").val();
-            columns_mapping.max_estimate = $("#maxEst").val(); 
             $.ajax({
                 type: 'PUT',
                 url: 'http://localhost:5000/api/excelWorkbook',
@@ -242,6 +206,20 @@
                 contentType: 'application/vnd.ms-excel',
                 processData: false,
                 success: function (data) {
+                    var requestBody = {
+                        sheet: $("#sheetName").val(),
+                        first_row: +$("#firstRow").val(),
+                        last_row: +$("#lastRow").val(),
+                        rows_to_skip: $("#rowSkip").val(),
+                        columns_mapping: {
+                            uid: $("#uid").val(),
+                            name: $("#nam").val(),
+                            blockers: $("#blockers").val(),
+                            min_estimate: $("#minEst").val(),
+                            normal_estimate: $("#norEst").val(),
+                            max_estimate: $("#maxEst").val()
+                        }
+                    };
                     alert("Response received: " + JSON.stringify(data));
                     requestBody.file = data.tempFileName;
                     $.ajax({
@@ -250,40 +228,44 @@
                         contentType: 'application/json',
                         data: JSON.stringify(requestBody),
                         success: function (data) {
-                            alert("Response received: " + JSON.stringify(data));
-                            applicationContext.tasks = data.tasks;
+                            alert("Response received: " + JSON.stringify(data));                           
+                            applicationContext.tasks = data.tasks;    
+                            var selectList = document.createElement("select");
+                            selectList.setAttribute("id", "tasks");
+                            selectList.setAttribute("name", "tasks");
+                            choiceGraphic.appendChild(selectList);
+                            for (var i = 0; i < applicationContext.tasks.length; i++) {
+                                var option = document.createElement("option");
+                                option.setAttribute("value", i);
+                                option.text = applicationContext.tasks[i].uid;
+                                selectList.appendChild(option);
+                            }
                         }    
                     });    
                 }
-             });                           
-        };
-
-        $("#loadTasksButton").click(loadTasks); 
+            }); 
+        }
 
         function printTaskGraphic() {
+            var taskToPrintIndex = $("#tasks").val(); 
+            var taskToPrint = applicationContext.tasks[taskToPrintIndex];
+            var inquiryPoints = {
+              "numberOfPoints": 50, 
+               "tasks": [taskToPrint]
+            };
 
-var taskToPrintIndex = $("#tasks").val(); 
-var taskToPrint = applicationContext.tasks[taskToPrintIndex]
-
-var inquiryPoints = {
-  "numberOfPoints": 50, 
-   "tasks": [taskToPrint]
-};
-            
-            $.ajax(
-
-            {
+            $.ajax({
                 type: 'POST',
                 url: 'http://localhost:5000/api/tasks/normalDistribution',
                 contentType: 'application/json',
                 data: JSON.stringify(inquiryPoints),
                 success: function drawTaskGraphic(data) {
                     //alert("Response received: " + JSON.stringify(data));
+                    var tasksPlot = {};                    
+                    tasksPlot.taskNormalDistributions = data.taskNormalDistributions;
                     var tasksObj = {};
                     var line = [];
-                    tasksPlot.taskNormalDistributions = data.taskNormalDistributions;
                     tasksObj = tasksPlot.taskNormalDistributions[0];
-
                     for(var i = 0, iLen = tasksObj['x'].length; i < iLen; i++){
                         line.push([tasksObj['x'][i], tasksObj['y'][i]]); 
                     }
@@ -291,27 +273,36 @@ var inquiryPoints = {
                     var plot = $.jqplot ('chartdiv', [line], {
                         title: tasksObj["taskUid"],
                         textColor:"#6A5ACD",            
-                        grid:{borderWidth:4.0,
-                        gridLineColor: "#CCCCFF"},        
+                        grid:{
+                            borderWidth:4.0,
+                            gridLineColor: "#CCCCFF"
+                        },        
                         axes:{
-                        yaxis:{min:0, 
-                        max:1,
-                        tickInterval:0.1},   
-                        xaxis:{min:0, 
-                        max:tasksObj['max_x']+1,
-                        numberTicks: tasksObj['max_x']+2,
-                        tickInterval:1}
+                            yaxis:{
+                                min:0, 
+                                max:1,
+                                tickInterval:0.1
+                            },   
+                            xaxis:{
+                                min:0, 
+                                max:tasksObj['max_x']+1,
+                                numberTicks: tasksObj['max_x']+2,
+                                tickInterval:1
+                            }
                         }, 
                         series:[{color:'#293133'}],   
                         axesDefaults:{min:0},            
-                        seriesDefaults:{showMarker:false,  
-                            lineWidth: 3.5}   
+                        seriesDefaults:{
+                            showMarker:false,  
+                            lineWidth: 3.5
+                        }   
                     });                   
                 }       
             });
         };
-        
-        $("#loadPrint").click(printTaskGraphic);        
+
+        $("#loadTasksButton").click(loadTasks);       
+        $("#printGraphicButton").click(printTaskGraphic);        
 
     </script>
 </body>
