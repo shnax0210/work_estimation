@@ -42,7 +42,7 @@
         <label><input type="text" id="sheetName"> Sheet name</label><br>
         <label><input type="text" id="firstRow"> First row</label><br>
         <label><input type="text" id="lastRow"> Last row</label><br>
-        <label><input type="text" id="rowSkip"> Rows to skip</label><br>
+        <label><input type="text" id="rowsToSkip"> Rows to skip</label><br>
         <label><input type="button" value="+" onmousedown="openMappingDiv()"></label>
         <label><input type="button" value="-" onmousedown="hideMappingDiv()"></label>
 
@@ -67,7 +67,7 @@
                     </select>
                 </td>
                 <td>min_estimate
-                    <select name="min_estimate" id="minEst">
+                    <select name="min_estimate" id="minEstimate">
                         <option value=""></option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -86,7 +86,7 @@
             </tr>
             <tr>                        
                 <td>name
-                    <select name="name" id="nam">
+                    <select name="name" id="name">
                         <option value=""></option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -103,7 +103,7 @@
                     </select>
                 </td>
                 <td>normal_estimate
-                    <select name="normal_estimate" id="norEst">
+                    <select name="normal_estimate" id="normalEstimate">
                         <option value=""></option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -139,7 +139,7 @@
                     </select>
                 </td>
                 <td>max_estimate
-                    <select name="max_estimate" id="maxEst">
+                    <select name="max_estimate" id="maxEstimate">
                         <option value=""></option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -188,7 +188,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <div id="chartdiv" style="height:500px;width:300px; "></div>
+                        <div id="chartdiv" style="height:500px;width:400px; "></div>
                     </td>
                 </tr>
                 </table>
@@ -207,39 +207,40 @@
                 processData: false,
                 success: function (data) {
                     var requestBody = {
+                        file: data.tempFileName,
                         sheet: $("#sheetName").val(),
                         first_row: +$("#firstRow").val(),
                         last_row: +$("#lastRow").val(),
-                        rows_to_skip: $("#rowSkip").val(),
+                        rows_to_skip: $("#rowsToSkip").val(),
                         columns_mapping: {
                             uid: $("#uid").val(),
-                            name: $("#nam").val(),
+                            name: $("#name").val(),
                             blockers: $("#blockers").val(),
-                            min_estimate: $("#minEst").val(),
-                            normal_estimate: $("#norEst").val(),
-                            max_estimate: $("#maxEst").val()
+                            min_estimate: $("#minEstimate").val(),
+                            normal_estimate: $("#normalEstimate").val(),
+                            max_estimate: $("#maxEstimate").val()
                         }
                     };
-                    alert("Response received: " + JSON.stringify(data));
-                    requestBody.file = data.tempFileName;
                     $.ajax({
                         type: 'POST',
                         url: 'http://localhost:5000/api/excelWorkbook/tasks',
                         contentType: 'application/json',
                         data: JSON.stringify(requestBody),
-                        success: function (data) {
-                            alert("Response received: " + JSON.stringify(data));                           
-                            applicationContext.tasks = data.tasks;    
-                            var selectList = document.createElement("select");
-                            selectList.setAttribute("id", "tasks");
-                            selectList.setAttribute("name", "tasks");
-                            choiceGraphic.appendChild(selectList);
-                            for (var i = 0; i < applicationContext.tasks.length; i++) {
-                                var option = document.createElement("option");
-                                option.setAttribute("value", i);
-                                option.text = applicationContext.tasks[i].uid;
-                                selectList.appendChild(option);
+                        success: function (data) {                         
+                            function populateTasksDropdown(data) {
+                                var selectList = document.createElement("select");
+                                selectList.setAttribute("id", "tasks");
+                                selectList.setAttribute("name", "tasks");
+                                choiceGraphic.appendChild(selectList);
+                                for (var i = 0; i < applicationContext.tasks.length; i++) {
+                                    var option = document.createElement("option");
+                                    option.setAttribute("value", i);
+                                    option.text = applicationContext.tasks[i].uid;
+                                    selectList.appendChild(option);
+                                }
                             }
+                            applicationContext.tasks = data.tasks;
+                            populateTasksDropdown(data.tasks);
                         }    
                     });    
                 }
@@ -247,6 +248,7 @@
         }
 
         function printTaskGraphic() {
+            document.getElementById("chartdiv").innerHTML = "";
             var taskToPrintIndex = $("#tasks").val(); 
             var taskToPrint = applicationContext.tasks[taskToPrintIndex];
             var inquiryPoints = {
@@ -260,18 +262,15 @@
                 contentType: 'application/json',
                 data: JSON.stringify(inquiryPoints),
                 success: function drawTaskGraphic(data) {
-                    //alert("Response received: " + JSON.stringify(data));
-                    var tasksPlot = {};                    
-                    tasksPlot.taskNormalDistributions = data.taskNormalDistributions;
-                    var tasksObj = {};
+                    var taskNormalDistribution = {};
+                    taskNormalDistribution = data.taskNormalDistributions[0];
                     var line = [];
-                    tasksObj = tasksPlot.taskNormalDistributions[0];
-                    for(var i = 0, iLen = tasksObj['x'].length; i < iLen; i++){
-                        line.push([tasksObj['x'][i], tasksObj['y'][i]]); 
+                    for(var i = 0, iLen = taskNormalDistribution['x'].length; i < iLen; i++){
+                        line.push([taskNormalDistribution['x'][i], taskNormalDistribution['y'][i]]); 
                     }
 
                     var plot = $.jqplot ('chartdiv', [line], {
-                        title: tasksObj["taskUid"],
+                        title: taskNormalDistribution["taskUid"],
                         textColor:"#6A5ACD",            
                         grid:{
                             borderWidth:4.0,
@@ -285,8 +284,8 @@
                             },   
                             xaxis:{
                                 min:0, 
-                                max:tasksObj['max_x']+1,
-                                numberTicks: tasksObj['max_x']+2,
+                                max:taskNormalDistribution['max_x']+1,
+                                numberTicks: taskNormalDistribution['max_x']+2,
                                 tickInterval:1
                             }
                         }, 
