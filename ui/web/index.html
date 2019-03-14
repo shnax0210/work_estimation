@@ -196,12 +196,17 @@
 
     <script> 
             var applicationContext = {}; 
-                                              
+            var applicationConstants = {
+                LOAD_EXCEL_FILE_TO_SERVER_URL: 'http://localhost:5000/api/excelWorkbook',
+                LOAD_TASKS_FROM_SERVER_ERL: 'http://localhost:5000/api/excelWorkbook/tasks',
+                LOAD_NORMAL_DISTRIBUTION_FROM_SERVER_URL: 'http://localhost:5000/api/tasks/normalDistribution',
+                NUMBER_OF_NORMAL_DISTRIBUTION_POINTS: 50
+            }                                 
         function loadTasks() {
             var excelFile = $('#excelFile').get(0).files.item(0);
             $.ajax({
                 type: 'PUT',
-                url: 'http://localhost:5000/api/excelWorkbook',
+                url: applicationConstants.LOAD_EXCEL_FILE_TO_SERVER_URL,
                 data: excelFile,
                 contentType: 'application/vnd.ms-excel',
                 processData: false,
@@ -223,19 +228,19 @@
                     };
                     $.ajax({
                         type: 'POST',
-                        url: 'http://localhost:5000/api/excelWorkbook/tasks',
+                        url: applicationConstants.LOAD_TASKS_FROM_SERVER_ERL,
                         contentType: 'application/json',
                         data: JSON.stringify(requestBody),
                         success: function (data) {                         
-                            function populateTasksDropdown(data) {
+                            function populateTasksDropdown(tasks) {
                                 var selectList = document.createElement("select");
                                 selectList.setAttribute("id", "tasks");
                                 selectList.setAttribute("name", "tasks");
                                 choiceGraphic.appendChild(selectList);
-                                for (var i = 0; i < applicationContext.tasks.length; i++) {
+                                for (var i = 0; i < tasks.length; i++) {
                                     var option = document.createElement("option");
                                     option.setAttribute("value", i);
-                                    option.text = applicationContext.tasks[i].uid;
+                                    option.text = tasks[i].uid;
                                     selectList.appendChild(option);
                                 }
                             }
@@ -252,18 +257,17 @@
             var taskToPrintIndex = $("#tasks").val(); 
             var taskToPrint = applicationContext.tasks[taskToPrintIndex];
             var inquiryPoints = {
-              "numberOfPoints": 50, 
-               "tasks": [taskToPrint]
+                "numberOfPoints": applicationConstants.NUMBER_OF_NORMAL_DISTRIBUTION_POINTS, 
+                "tasks": [taskToPrint]
             };
 
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:5000/api/tasks/normalDistribution',
+                url: applicationConstants.LOAD_NORMAL_DISTRIBUTION_FROM_SERVER_URL,
                 contentType: 'application/json',
                 data: JSON.stringify(inquiryPoints),
                 success: function drawTaskGraphic(data) {
-                    var taskNormalDistribution = {};
-                    taskNormalDistribution = data.taskNormalDistributions[0];
+                    var taskNormalDistribution = data.taskNormalDistributions[0];
                     var line = [];
                     for(var i = 0, iLen = taskNormalDistribution['x'].length; i < iLen; i++){
                         line.push([taskNormalDistribution['x'][i], taskNormalDistribution['y'][i]]); 
