@@ -6,3 +6,10 @@ tasks_reader/__pycache__/
 tmp/
 
 
+
+#IntelligIDEA files
+.idea/
+idea-module-files/
+
+# Jupyter notebook
+.ipynb_checkpoints/
