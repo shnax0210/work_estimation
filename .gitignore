@@ -1,3 +1,12 @@
+ui/web/node_modules
+
+__pycache__/
+calculator/__pycache__/
+tasks_reader/__pycache__/
+tmp/
+
+
+
 #IntelligIDEA files
 .idea/
 idea-module-files/

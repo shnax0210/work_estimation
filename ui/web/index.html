@@ -3,10 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <title>Work Estimation</title>
+    <script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="node_modules/jqplot/jquery.jqplot.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/jqplot/jquery.jqplot.min.css" />
+    <style type="text/css">
 
-    <script src="lib/jquery-3.3.1.min.js"></script>
+        #area{
+            display:none;
+        }
+
+    </style>
+    <script>
+
+        function openMappingDiv(){
+            document.getElementById("area").style.display = "block";
+        };
+        function hideMappingDiv(){
+            document.getElementById("area").style.display = "none";
+        }
+
+    </script>
 </head>
 <body>
     <h1>Work Estimation</h1>
+    <fieldset>
+
+        <legend>Open file</legend>
+
+        <input type="file" id="excelFile"/>
+
+    </fieldset>
+
+    <fieldset>
+
+        <legend>Reading of tasks</legend>
+
+        <label><input type="text" id="sheetName"> Sheet name</label><br>
+        <label><input type="text" id="firstRow"> First row</label><br>
+        <label><input type="text" id="lastRow"> Last row</label><br>
+        <label><input type="text" id="rowsToSkip"> Rows to skip</label><br>
+        <label><input type="button" value="+" onmousedown="openMappingDiv()"></label>
+        <label><input type="button" value="-" onmousedown="hideMappingDiv()"></label>
+
+    <div id="area">
+        <table border="0" widtd="100%">
+            <tr>
+                <td>uid
+                    <select  name="uid" id="uid">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>            
+                    </select>
+                </td>
+                <td>min_estimate
+                    <select name="min_estimate" id="minEstimate">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>            
+                    </select>
+                </td>
+            </tr>
+            <tr>                        
+                <td>name
+                    <select name="name" id="name">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>            
+                    </select>
+                </td>
+                <td>normal_estimate
+                    <select name="normal_estimate" id="normalEstimate">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>            
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>blockers
+                    <select name="blockers" id="blockers">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>            
+                    </select>
+                </td>
+                <td>max_estimate
+                    <select name="max_estimate" id="maxEstimate">
+                        <option value=""></option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>            
+                    </select>
+                </td>
+                </td>
+            </tr>
+        </table>
+    </div> 
+
+    </fieldset>
+
+    <fieldset>
+
+        <legend>Load</legend>
+
+        <div id="place">
+
+            <input type="submit" name="but" id="loadTasksButton" value="Load">
+
+        </div>
+
+    </fieldset>
+    <fieldset>
+
+        <legend>Print</legend>
+
+            <table border="0" widtd="100%">
+                <tr>
+                    <td>Tasks
+                        <div id="choiceGraphic"></div>                      
+                    </td>
+                    <td>
+                        <input type="button" value="Print" id="printGraphicButton">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="chartdiv" style="height:500px;width:400px; "></div>
+                    </td>
+                </tr>
+                </table>
+    </fieldset>
+
+    <script> 
+            var applicationContext = {}; 
+            var applicationConstants = {
+                LOAD_EXCEL_FILE_TO_SERVER_URL: 'http://localhost:5000/api/excelWorkbook',
+                LOAD_TASKS_FROM_SERVER_ERL: 'http://localhost:5000/api/excelWorkbook/tasks',
+                LOAD_NORMAL_DISTRIBUTION_FROM_SERVER_URL: 'http://localhost:5000/api/tasks/normalDistribution',
+                NUMBER_OF_NORMAL_DISTRIBUTION_POINTS: 50
+            }                                 
+        function loadTasks() {
+            var excelFile = $('#excelFile').get(0).files.item(0);
+            $.ajax({
+                type: 'PUT',
+                url: applicationConstants.LOAD_EXCEL_FILE_TO_SERVER_URL,
+                data: excelFile,
+                contentType: 'application/vnd.ms-excel',
+                processData: false,
+                success: function (data) {
+                    var requestBody = {
+                        file: data.tempFileName,
+                        sheet: $("#sheetName").val(),
+                        first_row: +$("#firstRow").val(),
+                        last_row: +$("#lastRow").val(),
+                        rows_to_skip: $("#rowsToSkip").val(),
+                        columns_mapping: {
+                            uid: $("#uid").val(),
+                            name: $("#name").val(),
+                            blockers: $("#blockers").val(),
+                            min_estimate: $("#minEstimate").val(),
+                            normal_estimate: $("#normalEstimate").val(),
+                            max_estimate: $("#maxEstimate").val()
+                        }
+                    };
+                    $.ajax({
+                        type: 'POST',
+                        url: applicationConstants.LOAD_TASKS_FROM_SERVER_ERL,
+                        contentType: 'application/json',
+                        data: JSON.stringify(requestBody),
+                        success: function (data) {                         
+                            function populateTasksDropdown(tasks) {
+                                var selectList = document.createElement("select");
+                                selectList.setAttribute("id", "tasks");
+                                selectList.setAttribute("name", "tasks");
+                                choiceGraphic.appendChild(selectList);
+                                for (var i = 0; i < tasks.length; i++) {
+                                    var option = document.createElement("option");
+                                    option.setAttribute("value", i);
+                                    option.text = tasks[i].uid;
+                                    selectList.appendChild(option);
+                                }
+                            }
+                            applicationContext.tasks = data.tasks;
+                            populateTasksDropdown(data.tasks);
+                        }    
+                    });    
+                }
+            }); 
+        }
+
+        function printTaskGraphic() {
+            document.getElementById("chartdiv").innerHTML = "";
+            var taskToPrintIndex = $("#tasks").val(); 
+            var taskToPrint = applicationContext.tasks[taskToPrintIndex];
+            var inquiryPoints = {
+                "numberOfPoints": applicationConstants.NUMBER_OF_NORMAL_DISTRIBUTION_POINTS, 
+                "tasks": [taskToPrint]
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: applicationConstants.LOAD_NORMAL_DISTRIBUTION_FROM_SERVER_URL,
+                contentType: 'application/json',
+                data: JSON.stringify(inquiryPoints),
+                success: function drawTaskGraphic(data) {
+                    var taskNormalDistribution = data.taskNormalDistributions[0];
+                    var line = [];
+                    for(var i = 0, iLen = taskNormalDistribution['x'].length; i < iLen; i++){
+                        line.push([taskNormalDistribution['x'][i], taskNormalDistribution['y'][i]]); 
+                    }
+
+                    var plot = $.jqplot ('chartdiv', [line], {
+                        title: taskNormalDistribution["taskUid"],
+                        textColor:"#6A5ACD",            
+                        grid:{
+                            borderWidth:4.0,
+                            gridLineColor: "#CCCCFF"
+                        },        
+                        axes:{
+                            yaxis:{
+                                min:0, 
+                                max:1,
+                                tickInterval:0.1
+                            },   
+                            xaxis:{
+                                min:0, 
+                                max:taskNormalDistribution['max_x']+1,
+                                numberTicks: taskNormalDistribution['max_x']+2,
+                                tickInterval:1
+                            }
+                        }, 
+                        series:[{color:'#293133'}],   
+                        axesDefaults:{min:0},            
+                        seriesDefaults:{
+                            showMarker:false,  
+                            lineWidth: 3.5
+                        }   
+                    });                   
+                }       
+            });
+        };
+
+        $("#loadTasksButton").click(loadTasks);       
+        $("#printGraphicButton").click(printTaskGraphic);        
+
+    </script>
 </body>
 </html>
