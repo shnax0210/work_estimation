@@ -5,6 +5,7 @@ import uuid
 import work_estimation_facade
 from calculator.three_points import ThreePoints
 from tasks_reader import tasks_filter
+from tasks_reader.task_row import TaskRow
 
 EXCEL_FILE_EXTENSION = '.xlsx'
 
@@ -57,6 +58,47 @@ def calculate_normal_distributions():
     return {
         "taskNormalDistributions": _build_normal_distributions(tasks, number_of_points)
     }
+
+
+@post('/api/tasks/roadMap')
+def calculate_normal_distributions():
+    task_rows = _convert_to_task_rows(request.json["tasks"])
+    number_of_workers = request.json["numberOfWorkers"]
+
+    valid_tasks, task_errors, history_records = work_estimation_facade.build_road_map(task_rows, number_of_workers)
+
+    return {
+        "roadMap": _convert_history_records(history_records),
+        "numberOfValidTasks": len(valid_tasks),
+        "errors": task_errors
+    }
+
+
+def _convert_work_info(work_info):
+    return {
+        "worker": work_info.worker_name,
+        "task_uid": work_info.task_uid
+    }
+
+
+def _convert_history_record(history_record):
+    return {
+        "day": history_record.day,
+        "work": [_convert_work_info(work_info) for work_info in history_record.cells]
+    }
+
+
+def _convert_history_records(history_records):
+    return [_convert_history_record(history_record) for history_record in history_records]
+
+
+def _convert_to_task_rows(tasks):
+    return [_convert_to_task_row(task) for task in tasks]
+
+
+def _convert_to_task_row(task):
+    return TaskRow(task['uid'], task['name'], task['blockers'], task['min_estimate'], task['normal_estimate'],
+                   task['max_estimate'])
 
 
 def _convert_normal_distribution(normal_distribution, task):

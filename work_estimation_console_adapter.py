@@ -37,10 +37,9 @@ def print_normal_distribution_for_tasks(task_rows):
 
 
 def emulate_use_normal_estimate(task_rows, number_of_workers):
-    valid_tasks, task_errors = tasks_adapter_facade.adapt_use_normal_estimate(task_rows)
-    _print_validation_results(task_rows, valid_tasks, task_errors)
+    valid_tasks, task_errors, history_records = work_estimation_facade.build_road_map(task_rows, number_of_workers)
 
-    history_records = work_emulator_facade.emulate(number_of_workers, valid_tasks)
+    _print_validation_results(task_rows, valid_tasks, task_errors)
 
     history_data = dict()
     history_data['day'] = [history_record.day for history_record in history_records]
