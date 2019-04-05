@@ -181,7 +181,7 @@
 
         <div id="place">
 
-            <input type="submit" name="but" id="loadTasksButton" value="Load" onmousedown="openRoadMap()">
+            <input type="submit" name="but" id="loadTasksButton" value="Load">
 
         </div>
 
@@ -277,6 +277,7 @@
                             }
                             applicationContext.tasks = data.tasks;
                             populateTasksDropdown(data.tasks);
+                            openRoadMap();
                         }    
                     });    
                 }
