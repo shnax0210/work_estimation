@@ -6,10 +6,20 @@
     <script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
     <script language="javascript" type="text/javascript" src="node_modules/jqplot/jquery.jqplot.min.js"></script>
     <link rel="stylesheet" type="text/css" href="node_modules/jqplot/jquery.jqplot.min.css" />
+    <script src="https://www.amcharts.com/lib/4/core.js"></script>
+    <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>    
     <style type="text/css">
 
         #area{
             display:none;
+        }
+		#map{
+			display: none;
+        }
+        #creationChart{
+            width: 1200px;
+            height: 400px;
         }
 
     </style>
@@ -20,6 +30,9 @@
         };
         function hideMappingDiv(){
             document.getElementById("area").style.display = "none";
+        }
+        function openRoadMap(){
+        	document.getElementById("map").style.display = "block";
         }
 
     </script>
@@ -45,119 +58,120 @@
         <label><input type="button" value="+" onmousedown="openMappingDiv()"></label>
         <label><input type="button" value="-" onmousedown="hideMappingDiv()"></label>
 
-    <div id="area">
-        <table border="0" widtd="100%">
-            <tr>
-                <td>uid
-                    <select  name="uid" id="uid">
-                        <option value=""></option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="G">G</option>
-                        <option value="H">H</option>
-                        <option value="I">I</option>
-                        <option value="J">J</option>
-                        <option value="K">K</option>
-                        <option value="L">L</option>            
-                    </select>
-                </td>
-                <td>min_estimate
-                    <select name="min_estimate" id="minEstimate">
-                        <option value=""></option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="G">G</option>
-                        <option value="H">H</option>
-                        <option value="I">I</option>
-                        <option value="J">J</option>
-                        <option value="K">K</option>
-                        <option value="L">L</option>            
-                    </select>
-                </td>
-            </tr>
-            <tr>                        
-                <td>name
-                    <select name="name" id="name">
-                        <option value=""></option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="G">G</option>
-                        <option value="H">H</option>
-                        <option value="I">I</option>
-                        <option value="J">J</option>
-                        <option value="K">K</option>
-                        <option value="L">L</option>            
-                    </select>
-                </td>
-                <td>normal_estimate
-                    <select name="normal_estimate" id="normalEstimate">
-                        <option value=""></option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="G">G</option>
-                        <option value="H">H</option>
-                        <option value="I">I</option>
-                        <option value="J">J</option>
-                        <option value="K">K</option>
-                        <option value="L">L</option>            
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>blockers
-                    <select name="blockers" id="blockers">
-                        <option value=""></option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="G">G</option>
-                        <option value="H">H</option>
-                        <option value="I">I</option>
-                        <option value="J">J</option>
-                        <option value="K">K</option>
-                        <option value="L">L</option>            
-                    </select>
-                </td>
-                <td>max_estimate
-                    <select name="max_estimate" id="maxEstimate">
-                        <option value=""></option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="F">F</option>
-                        <option value="G">G</option>
-                        <option value="H">H</option>
-                        <option value="I">I</option>
-                        <option value="J">J</option>
-                        <option value="K">K</option>
-                        <option value="L">L</option>            
-                    </select>
-                </td>
-                </td>
-            </tr>
-        </table>
-    </div> 
+    	<div id="area">
+
+	        <table border="0" widtd="100%">
+	            <tr>
+	                <td>uid
+	                    <select  name="uid" id="uid">
+	                        <option value=""></option>
+	                        <option value="A">A</option>
+	                        <option value="B">B</option>
+	                        <option value="C">C</option>
+	                        <option value="D">D</option>
+	                        <option value="E">E</option>
+	                        <option value="F">F</option>
+	                        <option value="G">G</option>
+	                        <option value="H">H</option>
+	                        <option value="I">I</option>
+	                        <option value="J">J</option>
+	                        <option value="K">K</option>
+	                        <option value="L">L</option>            
+	                    </select>
+	                </td>
+	                <td>min_estimate
+	                    <select name="min_estimate" id="minEstimate">
+	                        <option value=""></option>
+	                        <option value="A">A</option>
+	                        <option value="B">B</option>
+	                        <option value="C">C</option>
+	                        <option value="D">D</option>
+	                        <option value="E">E</option>
+	                        <option value="F">F</option>
+	                        <option value="G">G</option>
+	                        <option value="H">H</option>
+	                        <option value="I">I</option>
+	                        <option value="J">J</option>
+	                        <option value="K">K</option>
+	                        <option value="L">L</option>            
+	                    </select>
+	                </td>
+	            </tr>
+	            <tr>                        
+	                <td>name
+	                    <select name="name" id="name">
+	                        <option value=""></option>
+	                        <option value="A">A</option>
+	                        <option value="B">B</option>
+	                        <option value="C">C</option>
+	                        <option value="D">D</option>
+	                        <option value="E">E</option>
+	                        <option value="F">F</option>
+	                        <option value="G">G</option>
+	                        <option value="H">H</option>
+	                        <option value="I">I</option>
+	                        <option value="J">J</option>
+	                        <option value="K">K</option>
+	                        <option value="L">L</option>            
+	                    </select>
+	                </td>
+	                <td>normal_estimate
+	                    <select name="normal_estimate" id="normalEstimate">
+	                        <option value=""></option>
+	                        <option value="A">A</option>
+	                        <option value="B">B</option>
+	                        <option value="C">C</option>
+	                        <option value="D">D</option>
+	                        <option value="E">E</option>
+	                        <option value="F">F</option>
+	                        <option value="G">G</option>
+	                        <option value="H">H</option>
+	                        <option value="I">I</option>
+	                        <option value="J">J</option>
+	                        <option value="K">K</option>
+	                        <option value="L">L</option>            
+	                    </select>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td>blockers
+	                    <select name="blockers" id="blockers">
+	                        <option value=""></option>
+	                        <option value="A">A</option>
+	                        <option value="B">B</option>
+	                        <option value="C">C</option>
+	                        <option value="D">D</option>
+	                        <option value="E">E</option>
+	                        <option value="F">F</option>
+	                        <option value="G">G</option>
+	                        <option value="H">H</option>
+	                        <option value="I">I</option>
+	                        <option value="J">J</option>
+	                        <option value="K">K</option>
+	                        <option value="L">L</option>            
+	                    </select>
+	                </td>
+	                <td>max_estimate
+	                    <select name="max_estimate" id="maxEstimate">
+	                        <option value=""></option>
+	                        <option value="A">A</option>
+	                        <option value="B">B</option>
+	                        <option value="C">C</option>
+	                        <option value="D">D</option>
+	                        <option value="E">E</option>
+	                        <option value="F">F</option>
+	                        <option value="G">G</option>
+	                        <option value="H">H</option>
+	                        <option value="I">I</option>
+	                        <option value="J">J</option>
+	                        <option value="K">K</option>
+	                        <option value="L">L</option>            
+	                    </select>
+	                </td>
+	                </td>
+	            </tr>
+	        </table>
+    	</div> 
 
     </fieldset>
 
@@ -172,6 +186,7 @@
         </div>
 
     </fieldset>
+
     <fieldset>
 
         <legend>Print</legend>
@@ -193,12 +208,29 @@
                 </table>
     </fieldset>
 
+    <div id="map">
+
+	    <fieldset>
+
+	    	<legend>Road map</legend>
+
+	    		<input id="workes" type="text" name="quantity" class="field" value="Number of workers">
+				<input id="printMapButton" type="button" value="Build road map">
+				<div id="error" style="color:red"></div>
+                <div id="creationChart"></div>
+
+	    </fieldset>
+
+	</div>
+
+
     <script> 
             var applicationContext = {}; 
             var applicationConstants = {
                 LOAD_EXCEL_FILE_TO_SERVER_URL: 'http://localhost:5000/api/excelWorkbook',
                 LOAD_TASKS_FROM_SERVER_ERL: 'http://localhost:5000/api/excelWorkbook/tasks',
                 LOAD_NORMAL_DISTRIBUTION_FROM_SERVER_URL: 'http://localhost:5000/api/tasks/normalDistribution',
+                LOAD_ROAD_MAP_FROM_SERVER_URL: 'http://localhost:5000/api/tasks/roadMap',
                 NUMBER_OF_NORMAL_DISTRIBUTION_POINTS: 50
             }                                 
         function loadTasks() {
@@ -245,6 +277,7 @@
                             }
                             applicationContext.tasks = data.tasks;
                             populateTasksDropdown(data.tasks);
+                            openRoadMap();
                         }    
                     });    
                 }
@@ -303,8 +336,79 @@
             });
         };
 
+        function buildRoadMap() {
+            document.getElementById("error").innerHTML = "";
+            var misstep = '';
+            var numberOfWorkers = +$('#workes').val();
+            if(!numberOfWorkers || typeof numberOfWorkers === 'string'){
+                misstep = "Number of workers should be not empty and contain number";
+                document.getElementById("error").innerHTML = misstep;
+            }else{
+                printRoadMap(numberOfWorkers);
+            }
+        	function printRoadMap(numberOfWorkers){
+        		var requestBody = {
+    				"numberOfWorkers": numberOfWorkers, 
+    				"tasks": applicationContext.tasks
+				} 
+
+	        	$.ajax({
+		        	type: 'POST',
+					url: applicationConstants.LOAD_ROAD_MAP_FROM_SERVER_URL,
+					contentType: 'application/json',
+					data: JSON.stringify(requestBody),
+					success: function drawRoadMap(data) {
+						var viewMassif = data.roadMap;
+						am4core.useTheme(am4themes_animated);
+						var chart = am4core.create("creationChart", am4charts.XYChart);
+						chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+						chart.paddingRight = 300;
+						var colorSet = new am4core.ColorSet();
+						colorSet.saturation = 0.6;
+
+						chart.data = [];		
+						for( var i=0, iGet = viewMassif.length; i<iGet; i++){
+							var ser = viewMassif[i]["work"];
+							for( var j=0, iSet = ser.length; j<iSet; j++){
+								var lans = {};
+								var noun;
+								if (ser[j]["task_uid"]==null) continue;
+								lans.ordinate = ser[j]["task_uid"];
+								lans.name = ser[j]["worker"]; 
+								noun = (+lans.name.charAt(lans.name.length-1)) * 6;
+								lans.color =  colorSet.getIndex(noun);         
+								lans.fromDate = viewMassif[i]["day"] - 1;
+								lans.toDate = viewMassif[i]["day"];
+								chart.data.push(lans);				
+							}
+						}
+
+				        var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+				        categoryAxis.dataFields.category = "ordinate";
+				        categoryAxis.renderer.grid.template.location = 0;
+				        categoryAxis.renderer.inversed = true;
+
+				        var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+				        valueAxis.renderer.minGridDistance = 1;
+
+				        var series1 = chart.series.push(new am4charts.ColumnSeries());
+				        series1.columns.template.width = am4core.percent(80);
+				        series1.columns.template.tooltipText = "{name}";
+
+				        series1.dataFields.openValueX = "fromDate";
+				        series1.dataFields.valueX = "toDate";
+				        series1.dataFields.categoryY = "ordinate";
+				        series1.columns.template.propertyFields.fill = "color"; // get color from data
+				        series1.columns.template.propertyFields.stroke = "color";
+				        series1.columns.template.strokeOpacity = 1;
+				    }
+	        	});          
+        	}
+        }
+
         $("#loadTasksButton").click(loadTasks);       
         $("#printGraphicButton").click(printTaskGraphic);        
+        $("#printMapButton").click(buildRoadMap);
 
     </script>
 </body>
